@@ -6,29 +6,35 @@ on:
       - main
       - dev
   pull_request:
+    branches:
+      - main
+      - dev
 
 jobs:
   sonarcloud:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest # recommended
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build project
+      - name: Build
         run: npm run build
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarcloud-github-action@v2
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          organization: ${{ secrets.SONAR_ORGANIZATION }}
-          projectKey: ${{ secrets.SONAR_PROJECT_KEY }}
-          token: ${{ secrets.SONAR_TOKEN }}
+          organization: venkat968940
+          projectKey: Venkat968940_SonarCloud
